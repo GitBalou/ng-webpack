@@ -4,6 +4,7 @@
     "target": "es6",
     "sourceMap": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "typeRoots": [
       "../node_modules/@types"
