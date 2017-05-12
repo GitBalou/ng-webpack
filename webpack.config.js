@@ -58,21 +58,7 @@ module.exports = {
         // generate html index with bundled files
         new HtmlWebpackPlugin({
         template: './index.html',
-        chunks: ['vendor', 'app'],
-
-        /**
-         * include bundle by inverted alphabetical order : important because of dependencies between bundle!
-          */
-        chunksSortMode: function (a, b) {
-            if (a.names[0] > b.names[0]) {
-                return -1;
-            }
-            if (a.names[0] < b.names[0]) {
-                return 1;
-            }
-            return 0;
-        }
-
+        chunks: ['app']
     })],
 
     // dev server
