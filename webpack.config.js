@@ -7,12 +7,9 @@ module.exports = {
     // folder containing files to process
     context: path.resolve(__dirname, './src'),
 
-    /**
-     * Entry points
-     * app contains all app file
-     * vendor contains angular and other externals lib
-     */
+    // entry points
     entry: {
+        "polyfill": "./polyfill",
         "vendor": "./vendor",
         "app": "./main"
     },
@@ -25,13 +22,9 @@ module.exports = {
         filename: "./dist/[name].bundle.js"
     },
 
-    // webpack resolves js and ts files
+    // Extensions to look for when implicit `import` is encountered
     resolve: {
-        extensions: ['.ts', '.js'],
-        modules: [
-            path.resolve('./app'),
-            'node_modules'
-        ]
+        extensions: ['.ts', '.js']
     },
 
     // enable source map
@@ -41,25 +34,35 @@ module.exports = {
     module: {
         rules: [
 
-            // typescript
+            // typescript : 1/load ts, 2/use template-loader for templateUrl
             {
-                test: /\.ts/,
-                loader: 'ts-loader',
+                test: /\.ts$/,
+                loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
                 exclude: /node_modules/
+            },
+
+            // html
+            {
+                test: /\.html$/,
+                loader: 'html-loader'
             }
         ]
     },
 
     /*
-    *   plugins
+     *   plugins
      */
     plugins: [
 
+        // remove shared dependencies between bundles
+        new webpack.optimize.CommonsChunkPlugin({
+            name: ['app', 'vendor', 'polyfill']
+        }),
+
         // generate html index with bundled files
         new HtmlWebpackPlugin({
-        template: './index.html',
-        chunks: ['app']
-    })],
+            template: './index.html'
+        })],
 
     // dev server
     devServer: {

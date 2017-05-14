@@ -10,7 +10,8 @@
       "../node_modules/@types"
     ],
     "types": [
-      "core-js"
+      "core-js",
+      "node"
     ]
   },
   "exclude": [
