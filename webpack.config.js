@@ -1,6 +1,9 @@
 const webpack = require("webpack");
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+console.log(path.resolve(__dirname, './src/app'));
 
 module.exports = {
 
@@ -45,6 +48,25 @@ module.exports = {
             {
                 test: /\.html$/,
                 loader: 'html-loader'
+            },
+
+            // component's css: to-string-loader for angular stylesUrl in components
+            {
+                test: /\.css$/,
+                exclude: path.resolve(__dirname, './src/style'),
+                include: path.resolve(__dirname, './src/app'),
+                loader: ['to-string-loader','css-loader']
+            },
+
+            // app's wide css goes to a separate bundle (see ExtractTextPlugin)
+            {
+                test: /\.css$/,
+                include: path.resolve(__dirname, './src/style'),
+                exclude: path.resolve(__dirname, './src/app'),
+                loader: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader'
+                })
             }
         ]
     },
@@ -53,6 +75,9 @@ module.exports = {
      *   plugins
      */
     plugins: [
+
+        // add <link ..> to index.html
+        new ExtractTextPlugin("styles.css"),
 
         // remove shared dependencies between bundles
         new webpack.optimize.CommonsChunkPlugin({
